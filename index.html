@@ -1,0 +1,145 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sigga Green - Cotiza tu Servicio</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background-color: #f4f8f4;
+      color: #333;
+    }
+    header {
+      background-color: #1e2e1e;
+      color: white;
+      padding: 1rem;
+      text-align: center;
+    }
+    header img {
+      max-height: 80px;
+    }
+    h1 {
+      font-size: 1.8rem;
+      margin: 0.5rem 0;
+    }
+    .container {
+      max-width: 600px;
+      margin: 2rem auto;
+      padding: 1rem;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    label {
+      display: block;
+      margin-top: 1rem;
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 0.5rem;
+      margin-top: 0.3rem;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    .checkbox-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .checkbox-group label {
+      flex: 1 0 30%;
+      margin-top: 0;
+    }
+    button {
+      margin-top: 1.5rem;
+      background-color: #2c4d2c;
+      color: white;
+      border: none;
+      padding: 0.75rem;
+      border-radius: 5px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    .result {
+      margin-top: 1.5rem;
+      font-weight: bold;
+      font-size: 1.2rem;
+      color: #2c4d2c;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="logo.png" alt="Logo Sigga Green" />
+    <h1>Cotiza tu Servicio de Recolección</h1>
+  </header>
+  <div class="container">
+    <form id="quoteForm">
+      <label for="bags">Cantidad de bolsas jumbo:</label>
+      <input type="number" id="bags" min="1" required />
+
+      <label>Días deseados de recolección:</label>
+      <div class="checkbox-group">
+        <label><input type="checkbox" value="Lunes" /> Lunes</label>
+        <label><input type="checkbox" value="Martes" /> Martes</label>
+        <label><input type="checkbox" value="Miércoles" /> Miércoles</label>
+        <label><input type="checkbox" value="Jueves" /> Jueves</label>
+        <label><input type="checkbox" value="Viernes" /> Viernes</label>
+        <label><input type="checkbox" value="Sábado" /> Sábado</label>
+        <label><input type="checkbox" value="Domingo" /> Domingo</label>
+      </div>
+
+      <label for="nombre">Nombre:</label>
+      <input type="text" id="nombre" required />
+
+      <label for="empresa">Empresa:</label>
+      <input type="text" id="empresa" />
+
+      <label for="telefono">Teléfono:</label>
+      <input type="tel" id="telefono" required />
+
+      <label for="correo">Correo electrónico:</label>
+      <input type="email" id="correo" required />
+
+      <label for="direccion">Dirección:</label>
+      <textarea id="direccion" rows="2" required></textarea>
+
+      <button type="submit">Calcular cotización</button>
+
+      <div class="result" id="resultado"></div>
+    </form>
+  </div>
+
+  <script>
+    const precios = {
+      1: [1772, 2984, 4255.33, 5559.33, 6810, 8000.67],
+      2: [1964, 2849.33, 5658.67, 7394, 9057.33, 10651.33],
+      4: [2953.33, 5788.67, 8509.33, 11118.67, 13620, 16017.33]
+    };
+
+    document.getElementById("quoteForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const bolsas = parseInt(document.getElementById("bags").value);
+      const diasSeleccionados = document.querySelectorAll("input[type='checkbox']:checked").length;
+      const resultado = document.getElementById("resultado");
+
+      const m3 = Math.floor(bolsas / 3);
+
+      if (![1,2,4].includes(m3)) {
+        resultado.innerText = "Para volúmenes distintos a 1, 2 o 4 m³, contáctanos directamente para una cotización personalizada.";
+        return;
+      }
+      if (diasSeleccionados === 0 || diasSeleccionados > 6) {
+        resultado.innerText = "Selecciona entre 1 y 6 días de servicio.";
+        return;
+      }
+
+      const precio = precios[m3][diasSeleccionados - 1];
+      resultado.innerText = `Costo semanal estimado: $${precio.toFixed(2)} MXN`;
+    });
+  </script>
+</body>
+</html>
